@@ -1,0 +1,30 @@
+﻿<Application x:Class="ShotCutter.App.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:models="clr-namespace:ShotCutter.Core.Models;assembly=ShotCutter.Core"
+             DispatcherUnhandledException="OnDispatcherUnhandledException">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ui:ThemesDictionary Theme="Dark" />
+                <ui:ControlsDictionary />
+            </ResourceDictionary.MergedDictionaries>
+
+            <ObjectDataProvider x:Key="CaptureModeValues"
+                                MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="models:CaptureMode" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+            <ObjectDataProvider x:Key="OutputFormatValues"
+                                MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="models:OutputFormat" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

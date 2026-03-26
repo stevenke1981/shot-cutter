@@ -1,0 +1,15 @@
+D:\shot_cutter\src\ShotCutter.SmartAnalysis\bin\Debug\net8.0\ShotCutter.SmartAnalysis.deps.json
+D:\shot_cutter\src\ShotCutter.SmartAnalysis\bin\Debug\net8.0\ShotCutter.SmartAnalysis.dll
+D:\shot_cutter\src\ShotCutter.SmartAnalysis\bin\Debug\net8.0\ShotCutter.SmartAnalysis.pdb
+D:\shot_cutter\src\ShotCutter.SmartAnalysis\bin\Debug\net8.0\ShotCutter.Core.dll
+D:\shot_cutter\src\ShotCutter.SmartAnalysis\bin\Debug\net8.0\ShotCutter.Core.pdb
+D:\shot_cutter\src\ShotCutter.SmartAnalysis\obj\Debug\net8.0\ShotCutter.SmartAnalysis.csproj.AssemblyReference.cache
+D:\shot_cutter\src\ShotCutter.SmartAnalysis\obj\Debug\net8.0\ShotCutter.SmartAnalysis.GeneratedMSBuildEditorConfig.editorconfig
+D:\shot_cutter\src\ShotCutter.SmartAnalysis\obj\Debug\net8.0\ShotCutter.SmartAnalysis.AssemblyInfoInputs.cache
+D:\shot_cutter\src\ShotCutter.SmartAnalysis\obj\Debug\net8.0\ShotCutter.SmartAnalysis.AssemblyInfo.cs
+D:\shot_cutter\src\ShotCutter.SmartAnalysis\obj\Debug\net8.0\ShotCutter.SmartAnalysis.csproj.CoreCompileInputs.cache
+D:\shot_cutter\src\ShotCutter.SmartAnalysis\obj\Debug\net8.0\ShotCutt.726D8756.Up2Date
+D:\shot_cutter\src\ShotCutter.SmartAnalysis\obj\Debug\net8.0\ShotCutter.SmartAnalysis.dll
+D:\shot_cutter\src\ShotCutter.SmartAnalysis\obj\Debug\net8.0\refint\ShotCutter.SmartAnalysis.dll
+D:\shot_cutter\src\ShotCutter.SmartAnalysis\obj\Debug\net8.0\ShotCutter.SmartAnalysis.pdb
+D:\shot_cutter\src\ShotCutter.SmartAnalysis\obj\Debug\net8.0\ref\ShotCutter.SmartAnalysis.dll

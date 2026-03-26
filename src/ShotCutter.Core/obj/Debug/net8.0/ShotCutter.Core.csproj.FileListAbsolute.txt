@@ -1,0 +1,11 @@
+D:\shot_cutter\src\ShotCutter.Core\obj\Debug\net8.0\ShotCutter.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\shot_cutter\src\ShotCutter.Core\obj\Debug\net8.0\ShotCutter.Core.AssemblyInfoInputs.cache
+D:\shot_cutter\src\ShotCutter.Core\obj\Debug\net8.0\ShotCutter.Core.AssemblyInfo.cs
+D:\shot_cutter\src\ShotCutter.Core\obj\Debug\net8.0\ShotCutter.Core.csproj.CoreCompileInputs.cache
+D:\shot_cutter\src\ShotCutter.Core\bin\Debug\net8.0\ShotCutter.Core.deps.json
+D:\shot_cutter\src\ShotCutter.Core\bin\Debug\net8.0\ShotCutter.Core.dll
+D:\shot_cutter\src\ShotCutter.Core\bin\Debug\net8.0\ShotCutter.Core.pdb
+D:\shot_cutter\src\ShotCutter.Core\obj\Debug\net8.0\ShotCutter.Core.dll
+D:\shot_cutter\src\ShotCutter.Core\obj\Debug\net8.0\refint\ShotCutter.Core.dll
+D:\shot_cutter\src\ShotCutter.Core\obj\Debug\net8.0\ShotCutter.Core.pdb
+D:\shot_cutter\src\ShotCutter.Core\obj\Debug\net8.0\ref\ShotCutter.Core.dll
