@@ -47,6 +47,12 @@ public partial class DashboardViewModel : ObservableObject
     [NotifyCanExecuteChangedFor(nameof(ClearVideosCommand))]
     private int _videoCount;
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasSelectedVideo))]
+    [NotifyPropertyChangedFor(nameof(SelectedVideoPath))]
+    [NotifyPropertyChangedFor(nameof(SelectedVideoSummary))]
+    private VideoInfo? _selectedVideo;
+
     // --- Capture options ---
     [ObservableProperty]
     private CaptureMode _selectedMode = CaptureMode.Interval;
@@ -90,6 +96,14 @@ public partial class DashboardViewModel : ObservableObject
     [ObservableProperty]
     private IReadOnlyList<IReadOnlyList<ScreenshotResult>>? _lastResults;
 
+    public bool HasSelectedVideo => SelectedVideo is not null;
+
+    public string SelectedVideoPath => SelectedVideo?.FilePath ?? "";
+
+    public string SelectedVideoSummary => SelectedVideo is null
+        ? "選取影片後會在這裡顯示預覽與資訊"
+        : $"{SelectedVideo.Duration:hh\\:mm\\:ss}  |  {SelectedVideo.Width}×{SelectedVideo.Height}  |  {SelectedVideo.CodecName}";
+
     // Commands
     [RelayCommand]
     private async Task AddVideosAsync()
@@ -126,6 +140,7 @@ public partial class DashboardViewModel : ObservableObject
         }
 
         VideoCount = Videos.Count;
+        EnsureSelectedVideo();
 
         if (dialog.FileNames.Length > 0)
         {
@@ -140,6 +155,7 @@ public partial class DashboardViewModel : ObservableObject
     {
         Videos.Clear();
         VideoCount = 0;
+        SelectedVideo = null;
         StatusText = "已清空影片清單";
     }
 
@@ -380,12 +396,18 @@ public partial class DashboardViewModel : ObservableObject
         }
 
         VideoCount = Videos.Count;
+        EnsureSelectedVideo();
     }
 
     public void RemoveVideo(VideoInfo video)
     {
+        var removedSelected = ReferenceEquals(SelectedVideo, video);
         Videos.Remove(video);
         VideoCount = Videos.Count;
+        if (removedSelected)
+        {
+            SelectedVideo = Videos.FirstOrDefault();
+        }
     }
 
     private void SaveLastOutputDirectory(string directory)
@@ -393,5 +415,13 @@ public partial class DashboardViewModel : ObservableObject
         var settings = _settings.Load();
         settings.LastOutputDirectory = directory;
         _settings.Save(settings);
+    }
+
+    private void EnsureSelectedVideo()
+    {
+        if (SelectedVideo is null && Videos.Count > 0)
+        {
+            SelectedVideo = Videos[0];
+        }
     }
 }
