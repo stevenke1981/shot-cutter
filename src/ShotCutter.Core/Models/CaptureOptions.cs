@@ -1,9 +1,16 @@
+using System.ComponentModel;
+
 namespace ShotCutter.Core.Models;
 
 public enum OutputFormat
 {
+    [Description("JPEG (.jpg)")]
     Jpeg,
+
+    [Description("PNG (.png)")]
     Png,
+
+    [Description("WebP (.webp)")]
     WebP
 }
 

@@ -12,10 +12,6 @@
       Drop="OnDrop"
       DragOver="OnDragOver">
 
-    <Page.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVis" />
-    </Page.Resources>
-
     <Grid Margin="24,16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -192,6 +188,37 @@
                             </StackPanel.Style>
                             <CheckBox Content="擷取第一幀" IsChecked="{Binding CaptureFirstFrame}" Margin="0,0,0,4" />
                             <CheckBox Content="擷取最後一幀" IsChecked="{Binding CaptureLastFrame}" />
+                        </StackPanel>
+
+                        <!-- SmartScene mode options -->
+                        <StackPanel Margin="0,0,0,12">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SelectedMode}" Value="{x:Static models:CaptureMode.SmartScene}">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,4"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                       Text="智慧場景分析：使用直方圖差異自動偵測場景切換，每個場景擷取代表幀。" />
+                            <TextBlock Text="場景靈敏度" Margin="0,8,0,4" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="60" />
+                                </Grid.ColumnDefinitions>
+                                <Slider Grid.Column="0" Minimum="0.05" Maximum="0.95"
+                                        Value="{Binding SceneChangeThreshold}"
+                                        TickFrequency="0.05" IsSnapToTickEnabled="True"
+                                        VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           Text="{Binding SceneChangeThreshold, StringFormat={}{0:0.00}}" />
+                            </Grid>
                         </StackPanel>
 
                         <Separator Margin="0,4,0,12" />

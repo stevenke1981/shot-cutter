@@ -6,6 +6,7 @@ using ShotCutter.App.ViewModels;
 using ShotCutter.App.Views.Pages;
 using ShotCutter.Core.Capture;
 using ShotCutter.Core.Services;
+using ShotCutter.SmartAnalysis;
 
 namespace ShotCutter.App;
 
@@ -37,6 +38,14 @@ public partial class App : Application
                     new SceneChangeCaptureStrategy(sp.GetRequiredService<IFFmpegService>()));
                 services.AddSingleton<ICaptureStrategy>(sp =>
                     new FirstLastFrameStrategy(sp.GetRequiredService<IFFmpegService>()));
+
+                // Smart analysis
+                services.AddSingleton<ISceneAnalyzer>(sp =>
+                    new HistogramSceneAnalyzer(sp.GetRequiredService<IFFmpegService>()));
+                services.AddSingleton<ICaptureStrategy>(sp =>
+                    new SmartCaptureStrategy(
+                        sp.GetRequiredService<IFFmpegService>(),
+                        sp.GetRequiredService<ISceneAnalyzer>()));
 
                 services.AddSingleton<IScreenshotEngine, ScreenshotEngine>();
 

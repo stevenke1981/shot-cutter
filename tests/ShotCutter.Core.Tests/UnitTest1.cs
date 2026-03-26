@@ -1,10 +1,8 @@
+// This file intentionally left as a placeholder — see other test files.
 namespace ShotCutter.Core.Tests;
 
-public class UnitTest1
+public class PlaceholderTest
 {
     [Fact]
-    public void Test1()
-    {
-
-    }
+    public void AlwaysPasses() { }
 }

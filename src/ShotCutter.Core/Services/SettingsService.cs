@@ -27,6 +27,11 @@ public sealed class SettingsService : ISettingsService
         _settingsPath = Path.Combine(dir, "settings.json");
     }
 
+    internal SettingsService(string settingsPath)
+    {
+        _settingsPath = settingsPath;
+    }
+
     public AppSettings Load()
     {
         if (!File.Exists(_settingsPath))

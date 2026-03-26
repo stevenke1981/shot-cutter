@@ -4,6 +4,7 @@
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:models="clr-namespace:ShotCutter.Core.Models;assembly=ShotCutter.Core"
+             xmlns:conv="clr-namespace:ShotCutter.App.Converters"
              DispatcherUnhandledException="OnDispatcherUnhandledException">
     <Application.Resources>
         <ResourceDictionary>
@@ -12,6 +13,7 @@
                 <ui:ControlsDictionary />
             </ResourceDictionary.MergedDictionaries>
 
+            <!-- Enum data sources -->
             <ObjectDataProvider x:Key="CaptureModeValues"
                                 MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
                 <ObjectDataProvider.MethodParameters>
@@ -25,6 +27,13 @@
                     <x:Type TypeName="models:OutputFormat" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
+
+            <!-- Value converters -->
+            <conv:CountToVisibilityConverter    x:Key="CountToVisibilityConverter" />
+            <conv:EnumToDescriptionConverter    x:Key="EnumToDescriptionConverter" />
+            <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVis" />
+            <conv:FileSizeConverter             x:Key="FileSizeConverter" />
+            <BooleanToVisibilityConverter       x:Key="BoolToVis" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
