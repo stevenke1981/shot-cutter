@@ -16,11 +16,16 @@ public interface IFFmpegService
 public sealed class FFmpegService : IFFmpegService
 {
     private readonly ProcessRunner _runner = new();
-    private readonly string _ffmpegPath;
+    private readonly Func<string> _ffmpegPathFactory;
 
     public FFmpegService(string ffmpegPath)
+        : this(() => ffmpegPath)
     {
-        _ffmpegPath = ffmpegPath;
+    }
+
+    public FFmpegService(Func<string> ffmpegPathFactory)
+    {
+        _ffmpegPathFactory = ffmpegPathFactory;
     }
 
     public async Task<ProcessResult> ExecuteAsync(
@@ -28,7 +33,7 @@ public sealed class FFmpegService : IFFmpegService
         Action<string>? onStdErr = null,
         CancellationToken ct = default)
     {
-        return await _runner.RunAsync(_ffmpegPath, arguments, onStdErr, ct);
+        return await _runner.RunAsync(_ffmpegPathFactory(), arguments, onStdErr, ct);
     }
 
     public string GetOutputExtension(OutputFormat format) => format switch

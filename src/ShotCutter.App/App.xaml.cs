@@ -2,6 +2,7 @@
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ShotCutter.App.Services;
 using ShotCutter.App.ViewModels;
 using ShotCutter.App.Views.Pages;
 using ShotCutter.Core.Capture;
@@ -19,13 +20,26 @@ public partial class App : Application
         _host = Host.CreateDefaultBuilder()
             .ConfigureServices((_, services) =>
             {
-                // Core services
                 services.AddSingleton<ISettingsService, SettingsService>();
-                services.AddSingleton<IFFprobeService>(_ =>
-                    new FFprobeService(ResolveToolPath("ffprobe")));
-                services.AddSingleton<IFFmpegService>(_ =>
-                    new FFmpegService(ResolveToolPath("ffmpeg")));
-                services.AddSingleton<IBrowserService, BrowserService>();
+                services.AddSingleton<IFFprobeService>(sp =>
+                    new FFprobeService(() =>
+                    {
+                        var settings = sp.GetRequiredService<ISettingsService>().Load();
+                        return ToolPathResolver.ResolveFfprobePath(settings.FFprobePath);
+                    }));
+                services.AddSingleton<IFFmpegService>(sp =>
+                    new FFmpegService(() =>
+                    {
+                        var settings = sp.GetRequiredService<ISettingsService>().Load();
+                        return ToolPathResolver.ResolveFfmpegPath(settings.FFmpegPath);
+                    }));
+                services.AddSingleton<IBrowserService>(sp =>
+                    new BrowserService(() =>
+                    {
+                        var settings = sp.GetRequiredService<ISettingsService>().Load();
+                        return ToolPathResolver.ResolveBrowserPath(settings.BrowserPath);
+                    }));
+                services.AddSingleton<ICaptureResultsStore, CaptureResultsStore>();
 
                 // Capture strategies
                 services.AddSingleton<ICaptureStrategy>(sp =>
@@ -91,23 +105,6 @@ public partial class App : Application
             MessageBoxButton.OK,
             MessageBoxImage.Error);
         e.Handled = true;
-    }
-
-    private static string ResolveToolPath(string toolName)
-    {
-        var exeName = toolName + ".exe";
-
-        // 1. Bundled tools/ffmpeg/
-        var bundled = Path.Combine(
-            AppContext.BaseDirectory, "tools", "ffmpeg", exeName);
-        if (File.Exists(bundled)) return bundled;
-
-        // 2. Same directory as app
-        var local = Path.Combine(AppContext.BaseDirectory, exeName);
-        if (File.Exists(local)) return local;
-
-        // 3. Fallback to PATH
-        return exeName;
     }
 }
 

@@ -28,6 +28,13 @@
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
 
+            <ObjectDataProvider x:Key="BrowserSendModeValues"
+                                MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="models:BrowserSendMode" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
             <!-- Value converters -->
             <conv:CountToVisibilityConverter    x:Key="CountToVisibilityConverter" />
             <conv:EnumToDescriptionConverter    x:Key="EnumToDescriptionConverter" />

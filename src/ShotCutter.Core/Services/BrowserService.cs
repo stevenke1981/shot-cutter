@@ -10,11 +10,16 @@ public interface IBrowserService
 
 public sealed class BrowserService : IBrowserService
 {
-    private readonly string? _browserPath;
+    private readonly Func<string?> _browserPathFactory;
 
     public BrowserService(string? browserPath = null)
+        : this(() => browserPath)
     {
-        _browserPath = browserPath;
+    }
+
+    public BrowserService(Func<string?> browserPathFactory)
+    {
+        _browserPathFactory = browserPathFactory;
     }
 
     public void OpenImage(string imagePath)
@@ -77,11 +82,13 @@ public sealed class BrowserService : IBrowserService
 
     private void LaunchUrl(string url)
     {
-        if (!string.IsNullOrEmpty(_browserPath) && File.Exists(_browserPath))
+        var browserPath = _browserPathFactory();
+
+        if (!string.IsNullOrEmpty(browserPath) && File.Exists(browserPath))
         {
             Process.Start(new ProcessStartInfo
             {
-                FileName = _browserPath,
+                FileName = browserPath,
                 Arguments = $"\"{url}\"",
                 UseShellExecute = false
             });

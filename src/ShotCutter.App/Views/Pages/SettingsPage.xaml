@@ -48,12 +48,24 @@
             <TextBlock Text="預設擷取模式" Margin="0,0,0,4" />
             <ComboBox ItemsSource="{Binding Source={StaticResource CaptureModeValues}}"
                       SelectedItem="{Binding DefaultMode}"
-                      Margin="0,0,0,8" />
+                      Margin="0,0,0,8">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
             <TextBlock Text="預設輸出格式" Margin="0,0,0,4" />
             <ComboBox ItemsSource="{Binding Source={StaticResource OutputFormatValues}}"
                       SelectedItem="{Binding DefaultFormat}"
-                      Margin="0,0,0,8" />
+                      Margin="0,0,0,8">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
             <TextBlock Text="預設品質" Margin="0,0,0,4" />
             <Grid Margin="0,0,0,8">
@@ -91,6 +103,17 @@
             <CheckBox Content="擷取完成後自動在瀏覽器開啟"
                       IsChecked="{Binding AutoOpenInBrowser}"
                       Margin="0,0,0,8" />
+
+            <TextBlock Text="開啟方式" Margin="0,0,0,4" />
+            <ComboBox ItemsSource="{Binding Source={StaticResource BrowserSendModeValues}}"
+                      SelectedItem="{Binding BrowserSendMode}"
+                      Margin="0,0,0,8">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
             <TextBlock Text="指定瀏覽器" Margin="0,0,0,4" />
             <Grid Margin="0,0,0,16">

@@ -22,6 +22,7 @@ public partial class SettingsViewModel : ObservableObject
         MaxParallelTasks = _appSettings.MaxParallelTasks;
         AutoOpenInBrowser = _appSettings.AutoOpenInBrowser;
         BrowserPath = _appSettings.BrowserPath ?? "";
+        BrowserSendMode = _appSettings.BrowserSendMode;
         DefaultMode = _appSettings.DefaultMode;
         DefaultFormat = _appSettings.DefaultFormat;
         DefaultQuality = _appSettings.DefaultQuality;
@@ -32,6 +33,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private int _maxParallelTasks;
     [ObservableProperty] private bool _autoOpenInBrowser;
     [ObservableProperty] private string _browserPath;
+    [ObservableProperty] private BrowserSendMode _browserSendMode;
     [ObservableProperty] private CaptureMode _defaultMode;
     [ObservableProperty] private OutputFormat _defaultFormat;
     [ObservableProperty] private int _defaultQuality;
@@ -68,6 +70,7 @@ public partial class SettingsViewModel : ObservableObject
         _appSettings.MaxParallelTasks = Math.Clamp(MaxParallelTasks, 1, 8);
         _appSettings.AutoOpenInBrowser = AutoOpenInBrowser;
         _appSettings.BrowserPath = string.IsNullOrWhiteSpace(BrowserPath) ? null : BrowserPath;
+        _appSettings.BrowserSendMode = BrowserSendMode;
         _appSettings.DefaultMode = DefaultMode;
         _appSettings.DefaultFormat = DefaultFormat;
         _appSettings.DefaultQuality = Math.Clamp(DefaultQuality, 1, 100);
@@ -87,6 +90,7 @@ public partial class SettingsViewModel : ObservableObject
         MaxParallelTasks = 2;
         AutoOpenInBrowser = false;
         BrowserPath = "";
+        BrowserSendMode = BrowserSendMode.HtmlGallery;
         DefaultMode = CaptureMode.Interval;
         DefaultFormat = OutputFormat.Jpeg;
         DefaultQuality = 85;

@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using System.ComponentModel;
 
 namespace ShotCutter.Core.Models;
 
@@ -21,6 +22,9 @@ public sealed class AppSettings
 
 public enum BrowserSendMode
 {
+    [Description("只開啟第一張圖片")]
     SingleImage,
+
+    [Description("開啟 HTML 相簿")]
     HtmlGallery
 }

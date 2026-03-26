@@ -3,6 +3,7 @@ using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
+using ShotCutter.App.Services;
 using ShotCutter.Core.Models;
 using ShotCutter.Core.Services;
 
@@ -14,6 +15,7 @@ public partial class DashboardViewModel : ObservableObject
     private readonly IScreenshotEngine _engine;
     private readonly ISettingsService _settings;
     private readonly IBrowserService _browser;
+    private readonly ICaptureResultsStore _resultsStore;
 
     private CancellationTokenSource? _cts;
 
@@ -21,17 +23,20 @@ public partial class DashboardViewModel : ObservableObject
         IFFprobeService ffprobe,
         IScreenshotEngine engine,
         ISettingsService settings,
-        IBrowserService browser)
+        IBrowserService browser,
+        ICaptureResultsStore resultsStore)
     {
         _ffprobe = ffprobe;
         _engine = engine;
         _settings = settings;
         _browser = browser;
+        _resultsStore = resultsStore;
 
         var appSettings = _settings.Load();
         SelectedMode = appSettings.DefaultMode;
         SelectedFormat = appSettings.DefaultFormat;
         Quality = appSettings.DefaultQuality;
+        OutputDirectory = appSettings.LastOutputDirectory ?? "";
     }
 
     // --- Video list ---
@@ -149,6 +154,11 @@ public partial class DashboardViewModel : ObservableObject
         if (string.IsNullOrEmpty(outputDir)) return;
 
         var options = BuildCaptureOptions();
+        if (!ValidateOptions(options))
+        {
+            return;
+        }
+
         var tasks = Videos
             .Select(v => new ScreenshotTask
             {
@@ -178,6 +188,7 @@ public partial class DashboardViewModel : ObservableObject
                 appSettings.MaxParallelTasks,
                 progress,
                 _cts.Token);
+            _resultsStore.SetResults(LastResults);
 
             var totalScreenshots = LastResults.Sum(r => r.Count);
             StatusText = $"完成！共擷取 {totalScreenshots} 張截圖";
@@ -186,7 +197,14 @@ public partial class DashboardViewModel : ObservableObject
             if (appSettings.AutoOpenInBrowser && totalScreenshots > 0)
             {
                 var allImages = LastResults.SelectMany(r => r.Select(s => s.ImagePath)).ToList();
-                _browser.OpenHtmlGallery(allImages);
+                if (appSettings.BrowserSendMode == BrowserSendMode.SingleImage)
+                {
+                    _browser.OpenImage(allImages[0]);
+                }
+                else
+                {
+                    _browser.OpenHtmlGallery(allImages);
+                }
             }
         }
         catch (OperationCanceledException)
@@ -229,6 +247,7 @@ public partial class DashboardViewModel : ObservableObject
         if (dialog.ShowDialog() == true)
         {
             OutputDirectory = dialog.FolderName;
+            SaveLastOutputDirectory(dialog.FolderName);
         }
     }
 
@@ -237,6 +256,7 @@ public partial class DashboardViewModel : ObservableObject
         if (!string.IsNullOrWhiteSpace(OutputDirectory))
         {
             Directory.CreateDirectory(OutputDirectory);
+            SaveLastOutputDirectory(OutputDirectory);
             return OutputDirectory;
         }
 
@@ -248,6 +268,7 @@ public partial class DashboardViewModel : ObservableObject
             {
                 var output = Path.Combine(dir, "ShotCutter_Output");
                 Directory.CreateDirectory(output);
+                SaveLastOutputDirectory(output);
                 return output;
             }
         }
@@ -268,6 +289,31 @@ public partial class DashboardViewModel : ObservableObject
             Format = SelectedFormat,
             Quality = Quality,
         };
+    }
+
+    private bool ValidateOptions(CaptureOptions options)
+    {
+        if (options.Mode == CaptureMode.TimePoint && options.TimePoints.Count == 0)
+        {
+            StatusText = "請至少輸入一個有效時間點";
+            return false;
+        }
+
+        if (options.Mode == CaptureMode.FirstLastFrame &&
+            !options.CaptureFirstFrame &&
+            !options.CaptureLastFrame)
+        {
+            StatusText = "第一幀與最後幀至少要啟用一個";
+            return false;
+        }
+
+        if (options.Mode == CaptureMode.Interval && options.IntervalSeconds <= 0)
+        {
+            StatusText = "間隔秒數必須大於 0";
+            return false;
+        }
+
+        return true;
     }
 
     private IReadOnlyList<TimeSpan> ParseTimePoints()
@@ -340,5 +386,12 @@ public partial class DashboardViewModel : ObservableObject
     {
         Videos.Remove(video);
         VideoCount = Videos.Count;
+    }
+
+    private void SaveLastOutputDirectory(string directory)
+    {
+        var settings = _settings.Load();
+        settings.LastOutputDirectory = directory;
+        _settings.Save(settings);
     }
 }

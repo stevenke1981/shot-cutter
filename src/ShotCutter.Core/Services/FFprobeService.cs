@@ -8,18 +8,23 @@ namespace ShotCutter.Core.Services;
 public sealed class FFprobeService : IFFprobeService
 {
     private readonly ProcessRunner _runner = new();
-    private readonly string _ffprobePath;
+    private readonly Func<string> _ffprobePathFactory;
 
     public FFprobeService(string ffprobePath)
+        : this(() => ffprobePath)
     {
-        _ffprobePath = ffprobePath;
+    }
+
+    public FFprobeService(Func<string> ffprobePathFactory)
+    {
+        _ffprobePathFactory = ffprobePathFactory;
     }
 
     public async Task<VideoInfo> GetVideoInfoAsync(string filePath, CancellationToken ct = default)
     {
         // Get basic video info as JSON
         var args = $"-v quiet -print_format json -show_format -show_streams -select_streams v:0 \"{filePath}\"";
-        var result = await _runner.RunAsync(_ffprobePath, args, cancellationToken: ct);
+        var result = await _runner.RunAsync(_ffprobePathFactory(), args, cancellationToken: ct);
 
         if (!result.Success)
             throw new InvalidOperationException($"FFprobe failed: {result.StandardError}");
@@ -67,7 +72,7 @@ public sealed class FFprobeService : IFFprobeService
     private async Task<IReadOnlyList<TimeSpan>> GetKeyFrameTimestampsAsync(string filePath, CancellationToken ct)
     {
         var args = $"-v quiet -select_streams v:0 -show_entries packet=pts_time,flags -of csv=p=0 \"{filePath}\"";
-        var result = await _runner.RunAsync(_ffprobePath, args, cancellationToken: ct);
+        var result = await _runner.RunAsync(_ffprobePathFactory(), args, cancellationToken: ct);
 
         if (!result.Success)
             return [];

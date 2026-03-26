@@ -25,36 +25,68 @@
                        Margin="0,0,8,0" />
         </StackPanel>
 
-        <!-- Screenshot thumbnail grid -->
-        <ListBox Grid.Row="2"
-                 ItemsSource="{Binding Screenshots}"
-                 SelectedItem="{Binding SelectedScreenshot}"
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                 BorderThickness="0"
-                 Background="Transparent">
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel />
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Border Margin="4" CornerRadius="6"
-                            Background="{DynamicResource ControlFillColorDefaultBrush}"
-                            Padding="4" Width="200" Cursor="Hand"
-                            ToolTip="{Binding ImagePath}">
-                        <StackPanel>
-                            <Image Source="{Binding ImagePath}" Height="120"
-                                   Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
-                            <TextBlock Text="{Binding Timestamp, StringFormat=hh\\:mm\\:ss\\.fff}"
-                                       HorizontalAlignment="Center" FontSize="11"
-                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                       Margin="0,4,0,0" />
-                        </StackPanel>
-                    </Border>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="320" />
+            </Grid.ColumnDefinitions>
+
+            <ListBox Grid.Column="0"
+                     ItemsSource="{Binding Screenshots}"
+                     SelectedItem="{Binding SelectedScreenshot}"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     BorderThickness="0"
+                     Background="Transparent">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="4" CornerRadius="6"
+                                Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                Padding="4" Width="200" Cursor="Hand"
+                                ToolTip="{Binding ImagePath}">
+                            <StackPanel>
+                                <Image Source="{Binding ImagePath}" Height="120"
+                                       Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                <TextBlock Text="{Binding Timestamp, StringFormat=hh\\:mm\\:ss\\.fff}"
+                                           HorizontalAlignment="Center" FontSize="11"
+                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                           Margin="0,4,0,0" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <Border Grid.Column="1" Margin="16,0,0,0" Padding="16"
+                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    CornerRadius="8">
+                <StackPanel>
+                    <TextBlock Text="詳細資訊" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,12" />
+
+                    <Image Source="{Binding SelectedScreenshot.ImagePath}" Height="180"
+                           Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+
+                    <TextBlock Text="時間戳" FontWeight="SemiBold" Margin="0,12,0,4" />
+                    <TextBlock Text="{Binding SelectedScreenshot.Timestamp, StringFormat=hh\\:mm\\:ss\\.fff}" />
+
+                    <TextBlock Text="檔案大小" FontWeight="SemiBold" Margin="0,12,0,4" />
+                    <TextBlock Text="{Binding SelectedScreenshot.FileSizeBytes, Converter={StaticResource FileSizeConverter}}" />
+
+                    <TextBlock Text="路徑" FontWeight="SemiBold" Margin="0,12,0,4" />
+                    <TextBlock Text="{Binding SelectedScreenshot.ImagePath}"
+                               TextWrapping="Wrap"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+                    <ui:Button Content="開啟選取圖片"
+                               Command="{Binding OpenSingleImageCommand}"
+                               Margin="0,16,0,0" />
+                </StackPanel>
+            </Border>
+        </Grid>
 
         <!-- Empty state -->
         <TextBlock Grid.Row="2"

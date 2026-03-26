@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ShotCutter.App.Services;
 using ShotCutter.Core.Models;
 using ShotCutter.Core.Services;
 
@@ -10,11 +11,21 @@ public partial class ResultsViewModel : ObservableObject
 {
     private readonly IBrowserService _browser;
     private readonly ISettingsService _settings;
+    private readonly ICaptureResultsStore _resultsStore;
 
-    public ResultsViewModel(IBrowserService browser, ISettingsService settings)
+    public ResultsViewModel(
+        IBrowserService browser,
+        ISettingsService settings,
+        ICaptureResultsStore resultsStore)
     {
         _browser = browser;
         _settings = settings;
+        _resultsStore = resultsStore;
+
+        if (_resultsStore.CurrentResults.Count > 0)
+        {
+            LoadResults(_resultsStore.CurrentResults);
+        }
     }
 
     public ObservableCollection<ScreenshotResult> Screenshots { get; } = [];
@@ -37,6 +48,7 @@ public partial class ResultsViewModel : ObservableObject
             }
         }
 
+        SelectedScreenshot = Screenshots.FirstOrDefault();
         StatusText = $"共 {Screenshots.Count} 張截圖";
     }
 
@@ -44,6 +56,14 @@ public partial class ResultsViewModel : ObservableObject
     private void OpenInBrowser()
     {
         if (Screenshots.Count == 0) return;
+
+        var appSettings = _settings.Load();
+        if (appSettings.BrowserSendMode == BrowserSendMode.SingleImage)
+        {
+            var target = SelectedScreenshot?.ImagePath ?? Screenshots[0].ImagePath;
+            _browser.OpenImage(target);
+            return;
+        }
 
         var images = Screenshots.Select(s => s.ImagePath).ToList();
         _browser.OpenHtmlGallery(images);
